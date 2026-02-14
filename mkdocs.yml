@@ -1,0 +1,132 @@
+site_name: Terascale 2026 Machine Learning Tutorials
+site_description: Hands-on tutorials for learning basic PyTorch to generative AI methods such as diffusion and flow matching models
+site_author: Stephen Jiggins
+site_url: https://sjiggins.github.io/Terscale26-ML-Tutorials/
+
+# Repository
+repo_name: sjiggins/Terascale26-ML-Tutorials
+repo_url: https://github.com/sjiggins/Terascale26-ML-Tutorials
+edit_uri: edit/main/docs/
+
+# Copyright
+copyright: Copyright &copy; 2024 - 2026
+
+# Theme Configuration
+theme:
+  name: material
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+  icon:
+    repo: fontawesome/brands/github
+    logo: material/school
+
+# Plugins
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+  - tags
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      title: On this page
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Extra JavaScript for Math rendering
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+# Extra CSS
+extra_css:
+  - stylesheets/extra.css
+
+# Navigation
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: installation.md
+      - Setup Guide: getting-started.md
+  - Tutorials:
+      - Tutorial 1 - DDPM: tutorials/tutorial-1.md
+      - Tutorial 2 - Flow Matching: tutorials/tutorial-2.md
+      - Tutorial 3 - Coming Soon: tutorials/tutorial-3.md
+      - Tutorial 4 - Coming Soon: tutorials/tutorial-4.md
+      - Tutorial 5 - Coming Soon: tutorials/tutorial-5.md
+  - Resources:
+      - FAQ: faq.md
+      - Troubleshooting: troubleshooting.md
+
+# Social links
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/yourusername/generative-tutorials
+    - icon: fontawesome/brands/python
+      link: https://www.python.org/
