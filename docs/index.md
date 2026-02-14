@@ -25,7 +25,7 @@ Simple introduction to PyTorch pythonic coding style, learning how to fit a poly
 - Simple PyTorch `nn.` module for fitting polynomial `pytorch tensor parameters`
 - Feature processing
 
-[Coming Soon](tutorials/tutorial-1.md){ .md-button }
+[Start Tutorial 1](tutorials/tutorial-1.md){ .md-button .md-button--primary }
 
 ---
 
@@ -38,7 +38,7 @@ Simple regression of polynomial functions using a universal approximator - i.e. 
 **Planned Topics:**
 - Fit a polynomial function like in Tutorial 1, but not with a polynomial parameter based function, but a perceptron or MLP
 
-[Coming Soon](tutorials/tutorial-3.md){ .md-button }
+[Start Tutorial 2](tutorials/tutorial-2.md){ .md-button .md-button--primary }
 
 ---
 
