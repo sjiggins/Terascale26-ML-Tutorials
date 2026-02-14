@@ -1,10 +1,11 @@
-# Generative Modeling Tutorials
+# Terascale 2026 Machine Learning Tutorials
 
-Welcome to the comprehensive tutorial series on **Generative Modeling**! This repository contains hands-on, educational tutorials designed to help you understand and implement modern generative models from scratch.
+Welcome to the machine learning tutorial series hosted at the **Terascale 2026 Statistics School**! This repository contains hands-on, educational tutorials designed to help you understand and implement modern machine learning methods using the PyTorch eco-system.
 
 ## Overview
 
-This tutorial series covers the fundamentals of generative modeling, from classical diffusion models to modern flow matching techniques. Each tutorial includes:
+This tutorial series introduces basic PyTorch usage for parameter estimation with regards to a polynomial fit, through to the latest generative methods,
+such as diffusion & flow matching models. Each tutorial includes:
 
 - Complete working code implementations
 - Step-by-step Jupyter notebooks
@@ -145,22 +146,13 @@ If you encounter issues:
 2. Review [Troubleshooting](troubleshooting.md)
 3. Open an issue on [GitHub](https://github.com/yourusername/generative-tutorials/issues)
 
-## Contributing
-
-Contributions are welcome! If you find bugs or have suggestions:
-
-- Open an issue
-- Submit a pull request
-- Improve documentation
-- Share your experiments
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 
-These tutorials are designed for educational purposes and draw inspiration from seminal papers in generative modeling:
+These tutorials are designed for educational purposes and draw inspiration from seminal papers:
 
 - Ho et al. (2020) - Denoising Diffusion Probabilistic Models
 - Lipman et al. (2023) - Flow Matching for Generative Modeling
