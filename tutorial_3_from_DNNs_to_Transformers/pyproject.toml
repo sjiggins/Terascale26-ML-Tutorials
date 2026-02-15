@@ -1,0 +1,29 @@
+[project]
+name = "DNNs-to-Transformer-tutorial"
+version = "0.1.0"
+description = "Demonstrating the strengths and weaknesses of DNNs, CNNS, and Transformers"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "matplotlib>=3.10.8",
+    "scipy>=1.17.0",
+    "torch>=2.9.1",
+    "tqdm>=4.67.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ipykernel>=6.25.0",
+    "jupyterlab>=4.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["DNNs_to_Transformer_tutorial"]
+
+[project.scripts]
+polynomial_tutorial = "DNNs_to_Transformer_tutorial.main:main"
+
