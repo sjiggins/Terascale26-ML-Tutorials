@@ -17,7 +17,7 @@ such as diffusion & flow matching models. Each tutorial includes:
 
 ### Tutorial 1: PyTorch Polynomial Regression
 
-**Status:** Coming Soon
+**Status:** Available
 
 Simple introduction to PyTorch pythonic coding style, learning how to fit a polynomial function to data using regression.
 
@@ -39,13 +39,13 @@ Simple regression of polynomial functions using a universal approximator - i.e. 
 **Planned Topics:**
 - Fit a polynomial function like in Tutorial 1, but not with a polynomial parameter based function, but a perceptron or MLP
 
-[Start Tutorial 2](tutorials/tutorial-2.md){ .md-button .md-button--primary }
+[Coming Soon](tutorials/tutorial-2.md){ .md-button }
 
 ---
 
 ### Tutorial 3: From DNNs to Transformers
 
-**Status:** Coming Soon
+**Status:** Available
 
 Learning with the same polynomial data how to train and understand the strengths and weaknesses of DNNs, CNNs and transformers.
 
@@ -58,7 +58,7 @@ Learning with the same polynomial data how to train and understand the strengths
 
 ### Tutorial 4: Denoising Diffusion Probabilistic Models (DDPM)
 
-**Status:** Available
+**Status:** Coming soon...
 
 Learn the foundations of diffusion models by implementing DDPM from scratch.
 
@@ -68,13 +68,13 @@ Learn the foundations of diffusion models by implementing DDPM from scratch.
 - Training a score-based model
 - Sampling with various schedulers
 
-[Start Tutorial 4](tutorials/tutorial-4.md){ .md-button .md-button--primary }
+[Coming Soon](tutorials/tutorial-4.md){ .md-button }
 
 ---
 
 ### Tutorial 5: Flow Matching
 
-**Status:** Available
+**Status:** Coming soon...
 
 Explore flow matching as an alternative to stochastic diffusion models.
 
@@ -84,7 +84,7 @@ Explore flow matching as an alternative to stochastic diffusion models.
 - ODE-based sampling
 - Comparison with DDPM
 
-[Start Tutorial 5](tutorials/tutorial-5.md){ .md-button .md-button--primary }
+[Coming Soon](tutorials/tutorial-5.md){ .md-button }
 
 ---
 
