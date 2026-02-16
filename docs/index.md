@@ -39,7 +39,7 @@ Simple regression of polynomial functions using a universal approximator - i.e. 
 **Planned Topics:**
 - Fit a polynomial function like in Tutorial 1, but not with a polynomial parameter based function, but a perceptron or MLP
 
-[Coming Soon](tutorials/tutorial-2.md){ .md-button }
+<span class="md-button md-button--disabled">Coming Soon</span>
 
 ---
 
@@ -52,7 +52,7 @@ Learning with the same polynomial data how to train and understand the strengths
 **Planned Topics:**
 - Fit DNN/CNN/Transformer to polynomial time forcasted data
 
-[Coming Soon](tutorials/tutorial-3.md){ .md-button }
+<span class="md-button md-button--disabled">Coming Soon</span>
 
 ---
 
@@ -68,7 +68,7 @@ Learn the foundations of diffusion models by implementing DDPM from scratch.
 - Training a score-based model
 - Sampling with various schedulers
 
-[Coming Soon](tutorials/tutorial-4.md){ .md-button }
+<span class="md-button md-button--disabled">Coming Soon</span>
 
 ---
 
@@ -84,7 +84,7 @@ Explore flow matching as an alternative to stochastic diffusion models.
 - ODE-based sampling
 - Comparison with DDPM
 
-[Coming Soon](tutorials/tutorial-5.md){ .md-button }
+<span class="md-button md-button--disabled">Coming Soon</span>
 
 ---
 
