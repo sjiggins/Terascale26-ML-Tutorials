@@ -15,7 +15,7 @@ Author: ML Tutorial Series
 import torch
 import matplotlib.pyplot as plt
 import numpy as np
-from MultiLayerPerceptron import MultiLayerPerceptron
+from .MultiLayerPerceptron import MultiLayerPerceptron
 
 # Logging
 import logging

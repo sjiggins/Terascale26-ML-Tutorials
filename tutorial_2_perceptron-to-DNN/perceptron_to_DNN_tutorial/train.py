@@ -18,7 +18,7 @@ Target Audience: PhD students and early career postdocs
 
 import torch
 import torch.optim as optim
-from loss import mean_squared_error
+from .loss import mean_squared_error
 import logging
 
 logger = logging.getLogger(__name__)
@@ -362,7 +362,7 @@ def compute_per_sample_gradient_distributions(model, x_train, y_train, reg_type=
     and creates large data structures (all gradient values stored).
     Should only be called at specific epochs for visualization.
     """
-    from loss import mean_squared_error, compute_total_loss_with_regularization
+    from .loss import mean_squared_error, compute_total_loss_with_regularization
     
     model.train()
     n_samples = len(x_train)
@@ -468,7 +468,7 @@ def train_model_with_gradient_tracking(model, x_train, y_train,
         - Train loss decreases but validation loss increases → Overfitting!
         - Both decrease together → Good generalization
     """
-    from loss import mean_squared_error, compute_total_loss_with_regularization
+    from .loss import mean_squared_error, compute_total_loss_with_regularization
     import torch.optim as optim
     
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
@@ -612,13 +612,6 @@ def train_model_with_gradient_tracking(model, x_train, y_train,
             logger.info(f"Final valid loss: {valid_loss_history[-1]:.6f}")
             final_gap = valid_loss_history[-1] - train_loss_history[-1]
             logger.info(f"Final gap (valid - train): {final_gap:+.6f}")
-            
-            if final_gap < 0.1:
-                logger.info("✓ No overfitting detected! Good generalization.")
-            elif final_gap < 0.5:
-                logger.info("⚠ Slight overfitting. Consider more regularization.")
-            else:
-                logger.info("⚠️ Significant overfitting! Increase regularization.")
         else:
             logger.info(f"Final total loss: {total_loss_history[-1]:.6f}")
         
@@ -689,7 +682,7 @@ def compute_validation_loss(model, x_valid, y_valid, reg_type='none',
         
         For fair comparison: Both train and valid should measure DATA loss only.
     """
-    from loss import mean_squared_error
+    from .loss import mean_squared_error
     
     # Set model to evaluation mode (disables dropout)
     model.eval()
@@ -760,7 +753,7 @@ def train_model_with_validation_tracking(model, x_train, y_train,
          |________________________ Epochs
              Train decreases, Valid increases!
     """
-    from loss import mean_squared_error, compute_total_loss_with_regularization
+    from .loss import mean_squared_error, compute_total_loss_with_regularization
     import torch.optim as optim
     
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)

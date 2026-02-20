@@ -16,6 +16,163 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+# ============================================================================
+# DATA GENERATION
+# ============================================================================
+
+def generate_high_order_polynomial_data(coeffs_true, poly_order, n_samples,
+                                        x_min=0, x_max=10, noise_std=0.5, seed=42):
+    """
+    Generate synthetic data from a high-order polynomial.
+    
+    Creates data following the model:
+        y = Σ(coeffs[i] * x^i) + noise
+    
+    This is useful for demonstrating:
+    - Polynomial regression with neural networks
+    - Feature normalization importance
+    - Overfitting with high-order polynomials
+    - Vanishing gradient problem in deep networks
+    
+    Args:
+        coeffs_true (list or array): True polynomial coefficients [c0, c1, c2, ...]
+                                     where y = c0 + c1*x + c2*x^2 + ...
+        poly_order (int): Maximum polynomial order (degree)
+        n_samples (int): Number of data points to generate
+        x_min (float): Minimum x value
+        x_max (float): Maximum x value
+        noise_std (float): Standard deviation of Gaussian noise
+        seed (int): Random seed for reproducibility
+    
+    Returns:
+        tuple: (x, y) where
+            x: torch.Tensor of shape (n_samples, 1) - input features
+            y: torch.Tensor of shape (n_samples, 1) - noisy target values
+    
+    Example:
+        >>> coeffs = [1.0, 0.5, -0.1]  # y = 1.0 + 0.5*x - 0.1*x^2
+        >>> x, y = generate_high_order_polynomial_data(
+        ...     coeffs_true=coeffs,
+        ...     poly_order=2,
+        ...     n_samples=100,
+        ...     x_min=0,
+        ...     x_max=10,
+        ...     noise_std=0.1,
+        ...     seed=42
+        ... )
+        >>> print(f"Generated {len(x)} samples")
+        >>> print(f"y range: [{y.min():.2f}, {y.max():.2f}]")
+    
+    Pedagogical Note:
+        High-order polynomials (order > 5) are:
+        - Powerful: Can fit complex patterns
+        - Dangerous: Prone to overfitting
+        - Unstable: Require feature normalization
+        
+        This function helps demonstrate these properties, especially
+        the vanishing gradient problem in deep networks!
+        
+        For Tutorial 2, we use 9th-order polynomials to create a
+        complex target function that requires deep networks to learn.
+    """
+    # Set random seed for reproducibility
+    torch.manual_seed(seed)
+    
+    # Generate uniformly spaced x values
+    x = torch.linspace(x_min, x_max, n_samples).reshape(-1, 1)
+    
+    # Compute polynomial: y = Σ(coeffs[i] * x^i)
+    y = torch.zeros(n_samples, 1)
+    
+    for i in range(min(poly_order + 1, len(coeffs_true))):
+        y += coeffs_true[i] * (x ** i)
+    
+    # Add Gaussian noise
+    if noise_std > 0:
+        noise = torch.randn_like(y) * noise_std
+        y += noise
+    
+    return x, y.flatten()
+
+
+def demonstrate_polynomial_data_generation():
+    """
+    Educational demonstration of polynomial data generation.
+    
+    Shows how different polynomial orders create different complexity levels.
+    This is used in Tutorial 2 to demonstrate the vanishing gradient problem.
+    """
+    import matplotlib.pyplot as plt
+    
+    logger.info("\n" + "="*70)
+    logger.info("DEMONSTRATION: Polynomial Data Generation")
+    logger.info("="*70)
+    
+    # Define polynomial coefficients of increasing complexity
+    coeffs_linear = [1.0, 0.5]                                    # Linear: y = 1 + 0.5x
+    coeffs_quadratic = [1.0, 0.5, -0.1]                          # Quadratic
+    coeffs_cubic = [1.0, 0.5, -0.1, 0.01]                        # Cubic
+    coeffs_high = [1.0, 0.5, -0.1, 0.01, -0.001, 0.00005]       # 5th order
+    
+    configs = [
+        (coeffs_linear, 1, "Linear (order 1)"),
+        (coeffs_quadratic, 2, "Quadratic (order 2)"),
+        (coeffs_cubic, 3, "Cubic (order 3)"),
+        (coeffs_high, 5, "High-order (order 5)")
+    ]
+    
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+    axes = axes.flatten()
+    
+    for idx, (coeffs, order, title) in enumerate(configs):
+        # Generate clean data (no noise)
+        x_clean, y_clean = generate_high_order_polynomial_data(
+            coeffs_true=coeffs,
+            poly_order=order,
+            n_samples=100,
+            x_min=0,
+            x_max=10,
+            noise_std=0.0,
+            seed=42
+        )
+        
+        # Generate noisy data
+        x_noisy, y_noisy = generate_high_order_polynomial_data(
+            coeffs_true=coeffs,
+            poly_order=order,
+            n_samples=50,
+            x_min=0,
+            x_max=10,
+            noise_std=0.5,
+            seed=42
+        )
+        
+        # Plot
+        axes[idx].plot(x_clean.numpy(), y_clean.numpy(), 'b-', linewidth=2, label='True function')
+        axes[idx].scatter(x_noisy.numpy(), y_noisy.numpy(), alpha=0.5, color='red', 
+                         edgecolors='black', s=50, label='Noisy samples')
+        axes[idx].set_xlabel('x', fontsize=12)
+        axes[idx].set_ylabel('y', fontsize=12)
+        axes[idx].set_title(title, fontsize=14, fontweight='bold')
+        axes[idx].legend()
+        axes[idx].grid(True, alpha=0.3)
+        
+        logger.info(f"\n{title}:")
+        logger.info(f"  Coefficients: {coeffs}")
+        logger.info(f"  y range: [{y_clean.min():.2f}, {y_clean.max():.2f}]")
+    
+    plt.tight_layout()
+    plt.savefig('polynomial_data_generation_demo.png', dpi=150, bbox_inches='tight')
+    logger.info("\nVisualization saved as 'polynomial_data_generation_demo.png'")
+    plt.show()
+    
+    logger.info("\n" + "="*70)
+    logger.info("KEY INSIGHT: Higher-order polynomials create more complex patterns!")
+    logger.info("            But they're harder to learn and more prone to overfitting.")
+    logger.info("="*70 + "\n")
+
+
+
 class FeatureNormalizer:
     """
     Normalizes features to a standard range for numerical stability.
