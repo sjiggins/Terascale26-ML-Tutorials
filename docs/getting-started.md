@@ -87,7 +87,10 @@ astral-uv is a fast Python package installer and resolver written in Rust. It's 
     **Method 2: Using pip**
     
     ```bash
+	# Local laptop
     pip install uv
+	# Local laptop or NAF
+	pip install --user uv 
     ```
     
     **Verify installation:**
