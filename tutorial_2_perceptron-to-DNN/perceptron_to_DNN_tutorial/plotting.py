@@ -24,12 +24,11 @@ logger = logging.getLogger(__name__)
 
 def plot_gradient_flow(gradient_norms_history, model, activations_tested, save_name='gradient_flow.png'):
     """
-    Visualize gradient flow through the network.
+    Visualize layer-wise gradient magnitude profile at final epoch.
     
-    Creates plots showing:
-    1. Gradient magnitude per layer over training
-    2. Comparison across different activation functions
-    3. Evidence of vanishing/exploding gradients
+    Creates a single plot showing how gradient magnitudes vary across layers
+    for different activation functions. This clearly demonstrates the vanishing
+    gradient problem by showing spatial decay through layers.
     
     Args:
         gradient_norms_history: Dict mapping activation -> gradient history
@@ -39,90 +38,170 @@ def plot_gradient_flow(gradient_norms_history, model, activations_tested, save_n
         model: Example model for layer names
         activations_tested: List of activation functions tested
         save_name: Output filename
-    """
-    fig, axes = plt.subplots(2, 2, figsize=(16, 12))
-    fig.suptitle('Vanishing Gradient Problem: Effect of Activation Functions', 
-                fontsize=16, fontweight='bold')
     
+    Pedagogical Note:
+        This visualization makes the vanishing gradient problem CRYSTAL CLEAR:
+        
+        **Sigmoid:** Exponential decay through layers (gradients vanish!)
+        - Layer 9 (output): ~1e-2
+        - Layer 1 (input): ~1e-8
+        - 6 orders of magnitude difference!
+        
+        **Tanh:** Moderate decay through layers
+        - Layer 9: ~1e-2
+        - Layer 1: ~1e-4
+        - 2 orders of magnitude difference
+        
+        **ReLU:** No decay! Stable gradients
+        - Layer 9: ~1e-2
+        - Layer 1: ~1e-2
+        - Constant throughout network!
+        
+        By showing gradient magnitude vs. layer number, students immediately
+        see WHY sigmoid fails in deep networks and WHY ReLU works.
+    """
     # Get layer names
     layer_names = [name for name, _ in model.named_parameters() if 'weight' in name]
     n_layers = len(layer_names)
     
-    # Color map for layers (earlier layers in warmer colors)
-    colors = plt.cm.Reds(np.linspace(0.3, 0.9, n_layers))
+    # Create single plot for layer-wise comparison
+    fig, ax = plt.subplots(1, 1, figsize=(12, 8))
     
-    # Plot 1: Gradient norms over time for each activation
-    for idx, activation in enumerate(activations_tested):
-        ax = axes[idx // 2, idx % 2]
-        
-        # Handle both formats: full history dict or just gradient_norms list
+    # Color and marker scheme for each activation
+    activation_styles = {
+        'sigmoid': {'color': '#D62728', 'marker': '^', 'label': 'Sigmoid', 'linestyle': '-'},
+        'tanh': {'color': '#FF7F0E', 'marker': 'o', 'label': 'Tanh', 'linestyle': '-'},
+        'relu': {'color': '#2CA02C', 'marker': 's', 'label': 'ReLU', 'linestyle': '-'}
+    }
+    
+    # Layer numbers for x-axis
+    layer_numbers = np.arange(1, n_layers + 1)
+    
+    # Plot gradient magnitude vs layer number for each activation
+    for activation in activations_tested:
+        # Get gradient history
         history = gradient_norms_history[activation]
         if isinstance(history, dict) and 'gradient_norms' in history:
             grad_history = history['gradient_norms']
         else:
             grad_history = history
         
-        epochs = range(len(grad_history))
+        # Get FINAL epoch gradients (when vanishing is most pronounced)
+        final_gradients = grad_history[-1]
         
-        # Plot each layer's gradient norm
-        for layer_idx, layer_name in enumerate(layer_names):
-            grad_norms = [grad_dict.get(layer_name, 0) for grad_dict in grad_history]
-            
-            # Skip if all zeros
-            if max(grad_norms) == 0:
-                continue
-            
-            layer_display_name = f"Layer {layer_idx + 1}"
-            ax.plot(epochs, grad_norms, label=layer_display_name, 
-                   color=colors[layer_idx], linewidth=2, alpha=0.8)
+        # Extract gradient magnitudes for each layer
+        grad_magnitudes = []
+        for layer_name in layer_names:
+            grad_mag = final_gradients.get(layer_name, 0)
+            if grad_mag == 0:
+                grad_mag = 1e-10  # Avoid log(0)
+            grad_magnitudes.append(grad_mag)
         
-        ax.set_xlabel('Epoch', fontsize=12)
-        ax.set_ylabel('Gradient Norm (L2)', fontsize=12)
-        ax.set_title(f'Activation: {activation.upper()}', fontsize=14, fontweight='bold')
-        ax.set_yscale('log')
-        ax.legend(fontsize=10, loc='best')
-        ax.grid(True, alpha=0.3, which='both')
+        # Get style for this activation
+        style = activation_styles.get(activation, 
+                                     {'color': 'gray', 'marker': 'o', 
+                                      'label': activation, 'linestyle': '-'})
         
-        # Add annotation for vanishing gradient
-        final_grad_first_layer = [grad_dict.get(layer_names[0], 0) for grad_dict in grad_history][-1]
-        final_grad_last_layer = [grad_dict.get(layer_names[-1], 0) for grad_dict in grad_history][-1]
+        # Plot the profile
+        ax.plot(layer_numbers, grad_magnitudes,
+               color=style['color'],
+               marker=style['marker'],
+               markersize=12,
+               linewidth=3,
+               linestyle=style['linestyle'],
+               label=style['label'],
+               alpha=0.8)
         
-        if final_grad_first_layer > 0 and final_grad_last_layer > 0:
-            ratio = final_grad_first_layer / final_grad_last_layer
-            if ratio < 0.1:
-                ax.text(0.05, 0.05, f'⚠️ VANISHING!\nLayer 1/Layer {n_layers} = {ratio:.2e}',
-                       transform=ax.transAxes, fontsize=10, 
-                       bbox=dict(boxstyle='round', facecolor='red', alpha=0.3))
-            elif ratio > 0.9:
-                ax.text(0.05, 0.05, f'✓ STABLE\nLayer 1/Layer {n_layers} = {ratio:.2f}',
-                       transform=ax.transAxes, fontsize=10,
-                       bbox=dict(boxstyle='round', facecolor='green', alpha=0.3))
+        # Add annotations for first and last layer gradients
+        first_grad = grad_magnitudes[0]
+        last_grad = grad_magnitudes[-1]
+        
+        # Compute gradient ratio
+        if last_grad > 0:
+            ratio = first_grad / last_grad
+        else:
+            ratio = 0
+        
+        # Annotate with ratio
+        y_pos = grad_magnitudes[0]
+        if activation == 'sigmoid':
+            ax.annotate(f'Ratio: {ratio:.2e}', 
+                       xy=(1, y_pos), 
+                       xytext=(1.5, y_pos * 2),
+                       fontsize=9,
+                       color=style['color'],
+                       bbox=dict(boxstyle='round', facecolor='white', alpha=0.7),
+                       arrowprops=dict(arrowstyle='->', color=style['color']))
+    
+    # Formatting
+    ax.set_xlabel('Layer Number (1 = Input Layer, {} = Output Layer)'.format(n_layers), 
+                  fontsize=13, fontweight='bold')
+    ax.set_ylabel('Gradient Magnitude (L2 Norm)', fontsize=13, fontweight='bold')
+    ax.set_title('Layer-wise Gradient Profile at Final Epoch\n' + 
+                'Demonstrating the Vanishing Gradient Problem',
+                fontsize=15, fontweight='bold', pad=20)
+    
+    # Use log scale to show exponential decay
+    ax.set_yscale('log')
+    
+    # Set x-axis to show all layers
+    ax.set_xticks(layer_numbers)
+    ax.set_xlim(0.5, n_layers + 0.5)
+    
+    # Grid for easier reading
+    ax.grid(True, alpha=0.3, which='both', linestyle='--')
+    
+    # Legend
+    ax.legend(fontsize=12, loc='best', framealpha=0.9)
+    
+    # Add annotations explaining the pattern
+    textstr = (
+        'Expected Pattern:\n'
+        '• Sigmoid: Exponential decay → VANISHING\n'
+        '• Tanh: Moderate decay\n'
+        '• ReLU: Stable (no decay) → HEALTHY'
+    )
+    ax.text(0.02, 0.98, textstr,
+           transform=ax.transAxes,
+           fontsize=10,
+           verticalalignment='top',
+           bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
+    
+    # Add directional arrow showing gradient flow
+    ax.annotate('', xy=(n_layers - 0.5, ax.get_ylim()[1] * 0.5), 
+               xytext=(1.5, ax.get_ylim()[1] * 0.5),
+               arrowprops=dict(arrowstyle='<-', lw=2, color='gray', alpha=0.5))
+    ax.text((n_layers + 1) / 2, ax.get_ylim()[1] * 0.6, 
+           'Gradient Flow Direction',
+           ha='center', fontsize=10, style='italic', color='gray')
     
     plt.tight_layout()
     plt.savefig(save_name, dpi=150, bbox_inches='tight')
-    logger.info(f"Gradient flow visualization saved as '{save_name}'")
+    logger.info(f"Layer-wise gradient profile saved as '{save_name}'")
     plt.show()
 
 
 def plot_layer_gradient_norms(gradient_norms_history, model, activations_tested, 
-                               save_name='gradient_distributions'):
+                               save_name='gradient_distributions',
+                               signed=True,
+                               remove_zero_gradients=False):
     """
-    Visualize distribution of signed gradient values across all training samples.
+    Visualize distribution of gradient values across all training samples.
     
     Creates THREE SEPARATE plots showing:
-    - Histogram of signed gradient values at FIRST epoch
-    - Histogram of signed gradient values at MIDDLE epoch  
-    - Histogram of signed gradient values at LAST epoch
+    - Histogram of gradient values at FIRST epoch
+    - Histogram of gradient values at MIDDLE epoch  
+    - Histogram of gradient values at LAST epoch
     
     Each plot shows a grid:
     - Rows: Different activation functions (sigmoid, tanh, relu)
     - Columns: Different layers
-    - Content: 1D histogram showing distribution of ALL gradient values (with signs)
+    - Content: 1D histogram showing distribution of gradient values
               across all samples for that layer
     
     This visualization reveals:
     - Full distribution shape (Gaussian, bimodal, skewed?)
-    - Balance between positive and negative gradients
+    - Balance between positive and negative gradients (if signed=True)
     - Are gradients vanishing (distribution concentrated near zero)?
     - Are gradients exploding (wide distribution to large values)?
     - Different behavior across activation functions
@@ -131,19 +210,30 @@ def plot_layer_gradient_norms(gradient_norms_history, model, activations_tested,
         gradient_norms_history: Dict mapping activation -> training_history
                                training_history must contain 'per_sample_gradient_distributions'
                                Format: {epoch_idx: {layer_name: [array1, array2, ...]}}
-                               where each array contains signed gradient values for one sample
+                               where each array contains gradient values for one sample
         model: Example model for layer names
         activations_tested: List of activation functions tested
         save_name: Base name for output files (will append epoch identifier)
+        signed: If True (default), show signed gradient values.
+               If False, show absolute values (magnitude only).
+        remove_zero_gradients: If True, remove gradients that are exactly 0.0
+                              (common in ReLU due to inactive neurons).
+                              Default: False - students should discover this!
+                              
+                              Pedagogical Note: ReLU produces exact zeros when
+                              neurons are inactive (input < 0). This creates a
+                              spike at zero in the distribution. Removing these
+                              zeros allows better comparison with sigmoid/tanh.
     
     Pedagogical Note:
-        This plot shows the DISTRIBUTION of signed gradients across all samples,
+        This plot shows the DISTRIBUTION of gradients across all samples,
         revealing important patterns:
         
         **Healthy gradients (ReLU):**
-        - Symmetric distribution around zero
+        - Symmetric distribution around zero (if signed=True)
         - Moderate spread (-0.1 to +0.1)
         - Stable across epochs
+        - Many exact zeros (inactive neurons) - use remove_zero_gradients=True
         
         **Vanishing gradients (Sigmoid):**
         - First epoch: Moderate spread
@@ -154,6 +244,12 @@ def plot_layer_gradient_norms(gradient_norms_history, model, activations_tested,
         - Shows balance of positive/negative updates
         - Reveals asymmetries or biases
         - Can detect dying neurons (all gradients → 0 or one sign dominates)
+        
+        **Why remove_zero_gradients helps:**
+        - ReLU sets gradient=0 for inactive neurons (by design)
+        - This creates artificial spike at zero
+        - Removing zeros shows distribution of *active* gradients only
+        - Better for comparing sigmoid vs tanh vs ReLU
     """
     # Get layer names
     layer_names = [name for name, _ in model.named_parameters() if 'weight' in name]
@@ -185,8 +281,15 @@ def plot_layer_gradient_norms(gradient_norms_history, model, activations_tested,
         # Create figure with subplots
         fig, axes = plt.subplots(n_activations, n_layers, 
                                 figsize=(4 * n_layers, 3.5 * n_activations))
-        fig.suptitle(f'Gradient Magnitude Distribution - {epoch_title} (Epoch {epoch_idx + 1})',
-                    fontsize=16, fontweight='bold')
+        
+        # Create title with information about options
+        title_text = f'Gradient Magnitude Distribution - {epoch_title} (Epoch {epoch_idx + 1})'
+        if not signed:
+            title_text += ' [UNSIGNED - Absolute Values]'
+        if remove_zero_gradients:
+            title_text += ' [Zeros Removed]'
+        
+        fig.suptitle(title_text, fontsize=16, fontweight='bold')
         
         # Ensure axes is 2D even if only one activation
         if n_activations == 1:
@@ -207,8 +310,21 @@ def plot_layer_gradient_norms(gradient_norms_history, model, activations_tested,
                     # Concatenate all gradient values from all samples
                     all_gradients = np.concatenate(gradient_arrays)
                     
+                    # Apply transformations based on options
+                    if not signed:
+                        # Take absolute values
+                        all_gradients = np.abs(all_gradients)
+                    
+                    n_total = len(all_gradients)
+                    n_zeros = 0
+                    
+                    if remove_zero_gradients:
+                        # Remove exact zeros (ReLU inactive neurons)
+                        n_zeros = np.sum(all_gradients == 0.0)
+                        all_gradients = all_gradients[all_gradients != 0.0]
+                    
                     if len(all_gradients) > 0:
-                        # Plot histogram of signed gradient values
+                        # Plot histogram of gradient values
                         ax.hist(all_gradients, bins=50, color=epoch_color, 
                                alpha=0.7, edgecolor='black', linewidth=0.5)
                         
@@ -224,6 +340,11 @@ def plot_layer_gradient_norms(gradient_norms_history, model, activations_tested,
                             f'Std: {std_grad:.2e}\n'
                             f'Range: [{min_grad:.2e}, {max_grad:.2e}]'
                         )
+                        
+                        # Add zeros info if removed
+                        if remove_zero_gradients and n_zeros > 0:
+                            stats_text += f'\nZeros removed: {n_zeros}/{n_total} ({100*n_zeros/n_total:.1f}%)'
+                        
                         ax.text(0.98, 0.97, stats_text,
                                transform=ax.transAxes, fontsize=8,
                                verticalalignment='top', horizontalalignment='right',
@@ -249,7 +370,7 @@ def plot_layer_gradient_norms(gradient_norms_history, model, activations_tested,
                                verticalalignment='top',
                                bbox=dict(boxstyle='round', facecolor=status_color, alpha=0.5))
                     else:
-                        ax.text(0.5, 0.5, 'No gradient data',
+                        ax.text(0.5, 0.5, 'No non-zero gradients',
                                ha='center', va='center', transform=ax.transAxes,
                                fontsize=10, color='red')
                 else:
@@ -258,12 +379,16 @@ def plot_layer_gradient_norms(gradient_norms_history, model, activations_tested,
                            fontsize=10, color='red')
                 
                 # Formatting
-                ax.set_xlabel('Gradient Value (signed)', fontsize=10)
+                if signed:
+                    ax.set_xlabel('Gradient Value (signed)', fontsize=10)
+                else:
+                    ax.set_xlabel('Gradient Magnitude (|value|)', fontsize=10)
                 ax.set_ylabel('Count', fontsize=10)
                 ax.grid(True, alpha=0.3, axis='y')
                 
-                # Add vertical line at zero
-                ax.axvline(x=0, color='black', linestyle='--', linewidth=1, alpha=0.5)
+                # Add vertical line at zero (only for signed)
+                if signed:
+                    ax.axvline(x=0, color='black', linestyle='--', linewidth=1, alpha=0.5)
                 
                 # Title only on top row
                 if act_idx == 0:
@@ -278,16 +403,32 @@ def plot_layer_gradient_norms(gradient_norms_history, model, activations_tested,
                            rotation=90, ha='right', va='center')
         
         # Add overall explanation
-        fig.text(0.5, 0.02, 
-                f'Histogram shows distribution of SIGNED gradient values across all training samples and parameters\n'
-                f'Dashed line = zero | Healthy: Symmetric around zero | Vanishing: Concentrated near zero',
+        explanation = (
+            f'Histogram shows distribution of {"signed" if signed else "unsigned"} gradient values '
+            f'across all training samples and parameters'
+        )
+        if signed:
+            explanation += '\nDashed line = zero | Healthy: Symmetric around zero | Vanishing: Concentrated near zero'
+        else:
+            explanation += '\nHealthy: Wide spread | Vanishing: Concentrated near zero'
+        
+        if remove_zero_gradients:
+            explanation += '\n⚠️ Exact zeros removed (ReLU inactive neurons)'
+        
+        fig.text(0.5, 0.02, explanation,
                 ha='center', fontsize=10, style='italic',
                 bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
         
         plt.tight_layout(rect=[0, 0.04, 1, 0.97])
         
         # Save with descriptive filename
-        filename = f'{save_name}_epoch_{epoch_name}.png'
+        filename_parts = [save_name, f'epoch_{epoch_name}']
+        if not signed:
+            filename_parts.append('unsigned')
+        if remove_zero_gradients:
+            filename_parts.append('no_zeros')
+        filename = '_'.join(filename_parts) + '.png'
+        
         plt.savefig(filename, dpi=150, bbox_inches='tight')
         logger.info(f"Gradient distribution histogram ({epoch_title}) saved as '{filename}'")
         plt.show()
