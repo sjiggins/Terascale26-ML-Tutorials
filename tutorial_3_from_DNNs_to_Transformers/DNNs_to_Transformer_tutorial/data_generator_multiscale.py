@@ -49,16 +49,18 @@ class MultiScaleWaveDataset:
     """
     
     def __init__(
-        self,
-        T=200,
-        L=100,
-        x_range=(-2.0, 2.0),
-        noise_std=0.1,
-        slow_amplitude=0.5,
-        fast_amplitude=0.8,
-        regime_amplitude=0.3,
-        spatial_amplitude=0.2,
-        seed=None
+            self,
+            T=200,
+            L=100,
+            x_range=(-2.0, 2.0),
+            noise_std=0.1,
+            slow_period=100.0,
+            fast_period=7.0,
+            slow_amplitude=0.5,
+            fast_amplitude=0.8,
+            regime_amplitude=0.3,
+            spatial_amplitude=0.2,
+            seed=None
     ):
         """
         Initialize multi-scale wave dataset.
@@ -82,6 +84,8 @@ class MultiScaleWaveDataset:
         self.fast_amplitude = fast_amplitude
         self.regime_amplitude = regime_amplitude
         self.spatial_amplitude = spatial_amplitude
+        self.slow_period = slow_period
+        self.fast_period = fast_period
         
         if seed is not None:
             torch.manual_seed(seed)
@@ -130,7 +134,7 @@ class MultiScaleWaveDataset:
         # → Cannot capture period-100 pattern!
         # Transformer with global attention → Should capture
         
-        slow_trend = self.slow_amplitude * torch.sin(2 * torch.pi * t / 100.0)
+        slow_trend = self.slow_amplitude * torch.sin(2 * torch.pi * t / self.slow_period)
         slow_trend = slow_trend.unsqueeze(1).expand(-1, self.L)
         
         # ================================================================
@@ -141,7 +145,7 @@ class MultiScaleWaveDataset:
         # Combines spatial position with temporal oscillation
         
         fast_wave = self.fast_amplitude * torch.sin(
-            2 * torch.pi * (t_grid / 7.0 + x_grid / 4.0)
+            2 * torch.pi * (t_grid / self.fast_period + x_grid / 4.0)
         )
         
         # ================================================================
