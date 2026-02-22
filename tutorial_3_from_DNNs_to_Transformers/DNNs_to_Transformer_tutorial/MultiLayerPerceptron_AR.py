@@ -24,8 +24,7 @@ In our case:
 - "Tokens" = time steps
 - "Context" = sliding window of past observations
 
-Author: ML Tutorial Series
-Target Audience: PhD students and early career postdocs
+Author: S.Jiggins
 """
 
 import torch
@@ -148,7 +147,7 @@ class MultiLayerPerceptronAR(nn.Module):
         logger.info(f"  → Reshape:  [B, 1, L={self.spatial_dim}]  ← ONLY NEXT STEP")
         logger.info(f"\nTotal parameters: {total_params:,}")
         logger.info(f"Trainable parameters: {trainable_params:,}")
-        logger.info("\n⚠️  AUTOREGRESSIVE MODE:")
+        logger.info("\n AUTOREGRESSIVE MODE:")
         logger.info("   Multi-step forecasting requires calling forecast() method")
         logger.info("   which iteratively predicts and slides the window.")
         logger.info("="*70 + "\n")

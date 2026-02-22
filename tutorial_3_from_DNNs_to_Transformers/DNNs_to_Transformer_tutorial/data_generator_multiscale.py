@@ -4,17 +4,11 @@ data_generator_multiscale.py
 Multi-Scale Wave System: Designed to demonstrate MLP < CNN < Transformer
 
 This dataset combines:
-1. FAST OSCILLATIONS (period ~7 steps) - CNN should excel here
-2. SLOW TRENDS (period ~100 steps) - Transformer needed
-3. REGIME TRANSITIONS (every ~30 steps) - Adds complexity
+1. FAST OSCILLATIONS - CNN should excel here
+2. SLOW TRENDS - Transformer needed
+3. REGIME TRANSITIONS (every few steps) - Adds complexity
 
-Expected Performance:
-  Transformer: MSE ~0.06-0.08 (captures all scales)
-  CNN:         MSE ~0.08-0.12 (captures fast only)
-  MLP:         MSE ~0.15-0.20 (struggles with structure)
-
-Author: ML Tutorial Series
-Target Audience: PhD students demonstrating architecture choice
+Author: S.Jiggins
 """
 
 import torch
@@ -98,8 +92,8 @@ class MultiScaleWaveDataset:
         logger.info(f"Spatial samples: {L}")
         logger.info(f"Spatial range: {x_range}")
         logger.info(f"\nComponent Amplitudes:")
-        logger.info(f"  Slow trend (period ~100): {slow_amplitude}")
-        logger.info(f"  Fast wave (period ~7):    {fast_amplitude}")
+        logger.info(f"  Slow trend (period {self.slow_period}): {slow_amplitude}")
+        logger.info(f"  Fast wave (period {self.fast_period}):    {fast_amplitude}")
         logger.info(f"  Regime shifts (~30):      {regime_amplitude}")
         logger.info(f"  Spatial correlation:      {spatial_amplitude}")
         logger.info(f"  Noise std:                {noise_std}")
@@ -127,21 +121,21 @@ class MultiScaleWaveDataset:
         x_grid = x.unsqueeze(0).expand(self.T, -1)  # [T, L]
         
         # ================================================================
-        # COMPONENT 1: SLOW GLOBAL TREND (period ~100)
+        # COMPONENT 1: SLOW GLOBAL TREND
         # ================================================================
         # This tests ability to capture long-range dependencies
         # CNN with kernel_size=5, 3 layers has receptive field of 13
-        # → Cannot capture period-100 pattern!
+        # → Cannot capture long range period pattern!
         # Transformer with global attention → Should capture
         
         slow_trend = self.slow_amplitude * torch.sin(2 * torch.pi * t / self.slow_period)
         slow_trend = slow_trend.unsqueeze(1).expand(-1, self.L)
         
         # ================================================================
-        # COMPONENT 2: FAST LOCAL WAVE (period ~7)
+        # COMPONENT 2: FAST LOCAL WAVE
         # ================================================================
         # This tests ability to detect repeating local patterns
-        # CNN with kernel_size=7 → Perfect match!
+        # CNN can capture fast oscillations that are within receptive field
         # Combines spatial position with temporal oscillation
         
         fast_wave = self.fast_amplitude * torch.sin(
@@ -149,7 +143,7 @@ class MultiScaleWaveDataset:
         )
         
         # ================================================================
-        # COMPONENT 3: REGIME SHIFTS (every ~30 steps)
+        # COMPONENT 3: REGIME SHIFTS
         # ================================================================
         # Random baseline changes
         # Tests ability to detect transitions

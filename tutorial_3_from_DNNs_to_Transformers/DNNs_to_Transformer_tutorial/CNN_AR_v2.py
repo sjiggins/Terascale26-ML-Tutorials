@@ -1,22 +1,5 @@
 """
 CNN_AR_v2.py
-==================
-CRITICAL FIX: Removed BatchNorm to solve autoregressive distribution shift.
-
-THE BUG:
---------
-BatchNorm in autoregressive models causes catastrophic failure because:
-1. During training (teacher forcing): BatchNorm sees TRUE polynomial data
-2. During generation: BatchNorm sees MODEL PREDICTIONS (different distribution!)
-3. Statistics mismatch → Features collapse → Flat predictions
-
-THE FIX:
---------
-Option 1: NO normalization (works fine for CNNs)
-Option 2: InstanceNorm (normalizes per sample, per channel)
-Option 3: LayerNorm (normalizes across channels)
-
-This is a CRITICAL lesson about autoregressive models!
 """
 
 import torch
@@ -28,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class CNN_AR_v2(nn.Module):
     """
-    Autoregressive CNN without BatchNorm issues.
+    Autoregressive CNN
     """
     
     def __init__(
@@ -132,7 +115,7 @@ class CNN_AR_v2(nn.Module):
             if self.dropout_prob > 0:
                 logger.info(f"           + Dropout({self.dropout_prob})")
         
-        logger.info(f"\n⭐ FIXED Temporal Aggregation:")
+        logger.info(f"\n FIXED Temporal Aggregation:")
         logger.info(f"  Method: {self.aggregation}")
         
         logger.info(f"\nOutput Projection:")
@@ -141,7 +124,7 @@ class CNN_AR_v2(nn.Module):
         logger.info(f"\nReceptive field: {receptive_field} time steps")
         logger.info(f"Total parameters: {total_params:,}")
         
-        logger.info("\n✅ FIX SUMMARY:")
+        logger.info("\n FIX SUMMARY:")
         logger.info(f"   Normalization: {self.normalization} (NOT BatchNorm!)")
         logger.info("   Why: BatchNorm stats mismatch in autoregressive mode")
         logger.info("   Training sees TRUE data, generation sees PREDICTIONS")
@@ -216,7 +199,7 @@ if __name__ == "__main__":
     from logger import configure_logging
     configure_logging()
     
-    logger.info("Testing FIXED CNN (no BatchNorm)...")
+    logger.info("CNN AR")
     model = CNN_AR_v2_Fixed(
         history_length=150,
         spatial_dim=100,
@@ -228,7 +211,7 @@ if __name__ == "__main__":
     
     x_test = torch.randn(8, 150, 100)
     y_next = model(x_test)
-    logger.info(f"✓ Single step: {x_test.shape} → {y_next.shape}")
+    logger.info(f" Single step: {x_test.shape} → {y_next.shape}")
     
     y_forecast = model.forecast(x_test, n_steps=50)
-    logger.info(f"✓ Multi-step: {x_test.shape} → {y_forecast.shape}")
+    logger.info(f" Multi-step: {x_test.shape} → {y_forecast.shape}")
