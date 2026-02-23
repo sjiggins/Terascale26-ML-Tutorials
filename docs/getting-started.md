@@ -313,6 +313,8 @@ astral-uv is a fast Python package installer and resolver written in Rust. It's 
 	jupyter kernelspec list
 	```
 
+--- 
+
 ## Step 3: Cleaning up pip cache
 The process of installing the python library packages results in substantial data storage overhead in the 
 `pip/uv pip` cache. To clean this up and save space please run this command:
@@ -326,7 +328,7 @@ The process of installing the python library packages results in substantial dat
 	```bash
 	pip cache purge
 	```
-
+---
 
 ## Step 4: Running the Tutorials
 
