@@ -184,9 +184,9 @@ DNNs_to_Transformer_tutorial/
 
 - **`data_generator_multiscale.py`**: Multi-scale wave system
 	- Fast oscillations - CNN-friendly
-   - Slow trends - Transformer needed
-   - Regime transitions (every ~30 steps)
-   - Combines all components with controlled amplitudes
+	- Slow trends - Transformer needed
+	- Regime transitions (every ~30 steps)
+	- Combines all components with controlled amplitudes
 
 - **`MultiLayerPerceptron_AR.py`**: Autoregressive MLP
 	- Flattens temporal structure
