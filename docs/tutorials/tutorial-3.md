@@ -4,16 +4,16 @@ Learn how to choose the right architecture for sequential data by implementing a
 
 ## Overview
 
-This tutorial provides a hands-on introduction to **architecture selection for time-series forecasting**. You'll implement three fundamentally different architectures—MLPs, CNNs, and Transformers—and understand when each excels.
+This tutorial provides a hands-on introduction to **architecture selection for time-series forecasting**. You'll play around with three fundamentally different architectures — MLPs, CNNs, and Transformers—and understand when each excels.
 
 Through a carefully designed multi-scale wave dataset, you'll discover:
-- **MLPs** struggle with temporal structure
+- **MLPs** can learn temporal structure but at a cost
 - **CNNs** excel at local patterns but miss long-range dependencies
 - **Transformers** capture all scales through global attention
 
 This is the same architectural progression that powers modern AI: from simple feedforward networks to the attention mechanisms in GPT and BERT.
 
-**Duration:** 90-120 minutes
+**Duration:** 30-45 minutes
 
 **Difficulty:** Intermediate to Advanced
 
@@ -24,11 +24,10 @@ This is the same architectural progression that powers modern AI: from simple fe
 By the end of this tutorial, you will:
 
 - Understand how different architectures process sequential data
-- Implement autoregressive time-series forecasting
+- Run autoregressive time-series forecasting
 - Compare MLP, CNN, and Transformer performance empirically
 - Learn when CNNs excel (local patterns) vs when Transformers are needed (long-range)
 - Discover why GPT uses Transformers, not CNNs
-- Master architecture-task matching principles
 - Analyze prediction errors and confidence bands
 
 ---
@@ -40,7 +39,6 @@ By the end of this tutorial, you will:
 - Python programming
 - PyTorch basics (tensors, gradients, training loops)
 - Neural networks (MLPs, CNNs, basic Transformers)
-- Time-series concepts (autoregressive models, forecasting)
 - Linear algebra (matrix operations, dot products)
 
 **Recommended Background:**
@@ -93,8 +91,8 @@ You have **two options** for running this tutorial:
 
 2. Activate your virtual environment:
    ```bash
-   source .venv/bin/activate  # Linux/macOS
-   .venv\Scripts\Activate.ps1  # Windows
+   source ../.venv/bin/activate  # Linux/macOS
+   ../.venv\Scripts\Activate.ps1  # Windows
    ```
 
 3. Start Jupyter:
@@ -142,20 +140,20 @@ You have **two options** for running this tutorial:
 
 2. Activate your virtual environment:
    ```bash
-   source .venv/bin/activate  # Linux/macOS
-   .venv\Scripts\Activate.ps1  # Windows
+   source ../.venv/bin/activate  # Linux/macOS
+   ../.venv\Scripts\Activate.ps1  # Windows
    ```
 
 3. Run the main comparison script:
    ```bash
-   python DNNs_to_Transformer_tutorial/main_multiscale_comparison_IMPROVED.py
+   python DNNs_to_Transformer_tutorial/main.py
    ```
 
 4. Check outputs in the current directory
 
 **Customize Configuration:**
 
-Edit `main_multiscale_comparison_IMPROVED.py` to change:
+Edit `main.py` to change:
 - Forecast horizon (`H_forecast`)
 - Training samples (`n_train`, `n_val`, `n_test`)
 - Model sizes (hidden dimensions, channels)
@@ -176,7 +174,7 @@ DNNs_to_Transformer_tutorial/
 ├── CNN_AR_v2.py                             # CNN autoregressive (fixed)
 ├── Transformer_AR.py                        # Transformer autoregressive
 ├── train_autoregressive.py                  # Training utilities
-├── main_multiscale_comparison_IMPROVED.py   # Complete pipeline
+├── main.py                                  # Complete pipeline
 ├── logger.py                                # Logging configuration
 ├── plotting.py                              # Visualization utilities
 └── utils.py                                 # Helper functions
@@ -185,8 +183,8 @@ DNNs_to_Transformer_tutorial/
 **Key Files:**
 
 - **`data_generator_multiscale.py`**: Multi-scale wave system
-  - Fast oscillations (period ~7 steps) - CNN-friendly
-  - Slow trends (period ~100 steps) - Transformer needed
+  - Fast oscillations - CNN-friendly
+  - Slow trends - Transformer needed
   - Regime transitions (every ~30 steps)
   - Combines all components with controlled amplitudes
 
@@ -195,7 +193,7 @@ DNNs_to_Transformer_tutorial/
   - Fully connected layers
   - Learns arbitrary position-specific correlations
 
-- **`CNN_AR_v2.py`**: Autoregressive CNN (FIXED version)
+- **`CNN_AR_v2.py`**: Autoregressive CNN
   - 1D convolutions over time
   - No BatchNorm (critical for autoregressive!)
   - Attention-based temporal aggregation
@@ -207,7 +205,7 @@ DNNs_to_Transformer_tutorial/
   - Global receptive field
   - GPT-style architecture for time-series
 
-- **`main_multiscale_comparison_IMPROVED.py`**: Complete pipeline
+- **`main.py`**: Complete pipeline
   - Data generation and visualization
   - Model building (all three architectures)
   - Training with teacher forcing
@@ -227,8 +225,8 @@ The Jupyter notebook is organized into pedagogical sections:
 
 ### Part 2: Understanding the Data
 - Multi-scale wave system explained
-- Fast oscillations (period ~7)
-- Slow trends (period ~100)
+- Fast oscillations (period = slow period /4)
+- Slow trends 
 - Frequency spectrum analysis
 - Why this tests architecture limits
 
@@ -245,8 +243,6 @@ The Jupyter notebook is organized into pedagogical sections:
 - 1D convolutions explained
 - Receptive field calculation
 - Parameter sharing benefits
-- Critical bug: BatchNorm + Autoregressive = disaster
-- Fixed aggregation strategies
 
 #### 3.3 Transformer
 - How Transformers handle sequences (attention)
@@ -281,9 +277,7 @@ The Jupyter notebook is organized into pedagogical sections:
 - Explore failure modes
 
 ### Part 8: Key Takeaways
-- When to use MLP, CNN, or Transformer
-- Architecture-task matching principles
-- Real-world applications
+- Efficieny of Transformers and CNNS over MLPS
 
 ---
 
@@ -418,23 +412,7 @@ Problem: Can't see period-100 slow trend!
 Solution: Transformer (infinite receptive field)
 ```
 
-### 5. Critical Bug: BatchNorm + Autoregressive
-
-**The Problem:**
-```
-BatchNorm learns statistics from TRUE data (training)
-But normalizes PREDICTIONS (generation)
-→ Distribution mismatch → Feature collapse → Failure!
-
-Solution: Use LayerNorm, InstanceNorm, or no normalization
-```
-
-**Why this matters:**
-- This is why GPT uses LayerNorm, not BatchNorm
-- Critical for any autoregressive model
-- Students discover a real architectural constraint!
-
-### 6. Error Analysis
+### 5. Error Analysis
 
 **Three types of analysis:**
 
@@ -448,7 +426,7 @@ Solution: Use LayerNorm, InstanceNorm, or no normalization
 
 After completing the tutorial, try these experiments:
 
-### Easy (15-30 minutes each)
+### Easy (15 minutes each)
 
 1. **Modify data components:**
    ```python
@@ -472,7 +450,7 @@ After completing the tutorial, try these experiments:
    # How does shorter/longer horizon affect each model?
    ```
 
-### Medium (30-60 minutes each)
+### Medium (15 minutes each)
 
 4. **Compare CNN aggregation strategies:**
    ```python
@@ -527,7 +505,7 @@ After completing the tutorial, try these experiments:
 ```python
 USE_DIRECT_TRAINING = False  # Use teacher forcing instead
 ```
-Expected runtime: 10-15 minutes (still reasonable on CPU)
+Expected runtime: 15-20 minutes (still reasonable on CPU)
 
 ### CNN performs worse than MLP
 
@@ -646,7 +624,7 @@ After completing Tutorial 3:
 **Start Jupyter:**
 ```bash
 cd tutorial_3_from_DNNs_to_Transformers
-source .venv/bin/activate
+source ../.venv/bin/activate
 jupyter lab
 # Open: tutorial_DNN_to_Transformer.ipynb
 ```
@@ -654,7 +632,7 @@ jupyter lab
 **Run CLI:**
 ```bash
 cd tutorial_3_from_DNNs_to_Transformers
-source .venv/bin/activate
+source ../.venv/bin/activate
 python DNNs_to_Transformer_tutorial/main_multiscale_comparison_IMPROVED.py
 ```
 
@@ -697,13 +675,12 @@ USE_DIRECT_TRAINING = False  # Use teacher forcing
 
 In this tutorial, you've learned:
 
-✅ **Architecture selection** is critical for sequential data
-✅ **MLPs** struggle with temporal structure (no inductive bias)
-✅ **CNNs** excel at local patterns (parameter sharing, limited RF)
-✅ **Transformers** capture all scales (global attention, flexible)
-✅ **Autoregressive generation** works like GPT text generation
-✅ **BatchNorm breaks** autoregressive models (distribution shift)
-✅ **Error analysis** reveals model strengths/weaknesses
+ **Architecture selection** is critical for sequential data
+ **MLPs** struggle with temporal structure (no inductive bias)
+ **CNNs** excel at local patterns (parameter sharing, limited RF)
+ **Transformers** capture all scales (global attention, flexible)
+ **Autoregressive generation** works like GPT text generation
+ **Error analysis** reveals model strengths/weaknesses
 
 **The Big Picture:**
 ```

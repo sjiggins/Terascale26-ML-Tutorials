@@ -4,9 +4,9 @@ Master the fundamentals of deep learning by understanding vanishing gradients, a
 
 ## Overview
 
-This tutorial provides a comprehensive introduction to **Deep Neural Networks (DNNs)**, focusing on the critical challenges that arise when scaling from simple perceptrons to deep architectures. You'll learn why certain design choices matter and how to train stable, generalizable models.
+This tutorial provides an introduction to **Deep Neural Networks (DNNs)**, focusing on the critical challenges that arise when scaling from simple perceptrons to deep architectures. You'll learn why certain design choices matter and how to train stable, generalizable models.
 
-**Duration:** 120-150 minutes
+**Duration:** 30-45 minutes
 
 **Difficulty:** Intermediate
 
@@ -69,7 +69,7 @@ You have **two options** for running this tutorial:
 
 2. Activate your virtual environment:
    ```bash
-   source .venv/bin/activate  # Linux/macOS
+   source ../venv/bin/activate  # Linux/macOS
    .venv\Scripts\Activate.ps1  # Windows
    ```
 
@@ -190,7 +190,7 @@ perceptron_to_DNN_tutorial/
 
 The Jupyter notebook is organized into three main parts:
 
-### Part 1: The Vanishing Gradient Problem (40-50 minutes)
+### Part 1: The Vanishing Gradient Problem (15 minutes)
 
 **What you'll learn:**
 - Why deep networks fail with sigmoid/tanh activations
@@ -208,7 +208,7 @@ The Jupyter notebook is organized into three main parts:
 - Signed gradient distributions at different training stages
 - Layer-by-layer gradient comparison
 
-### Part 2: Detecting Overfitting (30-40 minutes)
+### Part 2: Detecting Overfitting (15 minutes)
 
 **What you'll learn:**
 - Train/validation/test split methodology
@@ -226,7 +226,7 @@ The Jupyter notebook is organized into three main parts:
 - Overfitting gap over epochs
 - Final model predictions vs ground truth
 
-### Part 3: Regularization Techniques (40-50 minutes)
+### Part 3: Regularization Techniques (15 minutes)
 
 **What you'll learn:**
 - L1 regularization (promotes sparsity)
@@ -235,9 +235,8 @@ The Jupyter notebook is organized into three main parts:
 - How to choose regularization strength
 
 **Experiments:**
-- Compare no regularization vs L2 vs dropout
+- Compare no regularization vs L1 vs L2 vs dropout
 - Observe reduced overfitting with regularization
-- Analyze regularization penalty over time
 - Compare final generalization performance
 
 **Key visualizations:**
@@ -266,24 +265,23 @@ When you run the tutorial, you'll generate:
 
 ### Gradient Flow Visualization
 
-Shows how gradients flow through layers over time for different activations:
+Shows how gradients flow through layers for different activations:
 - **Sigmoid**: Exponential decay (vanishing!)
 - **Tanh**: Moderate decay
 - **ReLU**: Stable gradients throughout
 
 ### Gradient Distributions
 
-Histograms showing the distribution of signed gradient values:
+Histograms showing the distribution of signed or unsigned gradient values:
 - **First epoch**: All activations show healthy gradients
 - **Last epoch**: Sigmoid collapsed near zero, ReLU still healthy
 
 ### Regularization Effects
 
-4-panel comparison showing:
+Plots showing:
 1. Train vs validation loss curves
 2. Overfitting gap over time
-3. Regularization penalty
-4. Final performance summary
+3. Final performance summary
 
 ---
 
@@ -361,7 +359,7 @@ Randomly deactivate neurons during training:
 
 After completing the tutorial, try these experiments:
 
-### Easy (15-30 minutes each)
+### Easy 
 
 1. **Change network depth:**
    ```python
@@ -383,7 +381,7 @@ After completing the tutorial, try these experiments:
    ```
    Observe the effect on train/validation gap
 
-### Medium (30-60 minutes each)
+### Medium
 
 4. **Compare all activation functions:**
    - Add 'leaky_relu' and 'elu' to the comparison
@@ -400,7 +398,7 @@ After completing the tutorial, try these experiments:
    - Observe training stability
    - Find the optimal value
 
-### Advanced (1-2 hours each)
+### Advanced
 
 7. **Implement batch normalization:**
    - Add batch norm layers
