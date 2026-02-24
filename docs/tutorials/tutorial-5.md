@@ -8,7 +8,7 @@ This tutorial provides a hands-on introduction to **Flow Matching**, an elegant 
 
 **Duration:** 90-120 minutes
 
-**Difficulty:** Intermediate
+**Difficulty:** Advanced
 
 ---
 
@@ -35,7 +35,7 @@ By the end of this tutorial, you will:
 
 **Recommended:**
 
-- Complete [Tutorial 1: DDPM](tutorial-1.md) first
+- Complete [Tutorial 4: DDPM](tutorial-4.md) first
 - Understanding of probability distributions
 
 **Required Setup:**
@@ -66,13 +66,13 @@ You have **two options** for running this tutorial:
 
 1. Navigate to the tutorial directory:
    ```bash
-   cd tutorial_2_flow_matching
+   cd tutorial_5_flow_matching
    ```
 
 2. Activate your virtual environment:
    ```bash
-   source .venv/bin/activate  # Linux/macOS
-   .venv\Scripts\Activate.ps1  # Windows
+   source ../.venv/bin/activate  # Linux/macOS
+   ../.venv\Scripts\Activate.ps1  # Windows
    ```
 
 3. Start Jupyter:
@@ -92,7 +92,7 @@ You have **two options** for running this tutorial:
 
 1. Open VSCode:
    ```bash
-   code tutorial_2_flow_matching
+   code tutorial_5_flow_matching
    ```
 
 2. Open `tutorial_notebook_Flow.ipynb`
@@ -111,13 +111,13 @@ You have **two options** for running this tutorial:
 
 1. Navigate to the tutorial directory:
    ```bash
-   cd tutorial_2_flow_matching
+   cd tutorial_5_flow_matching
    ```
 
 2. Activate your virtual environment:
    ```bash
-   source .venv/bin/activate  # Linux/macOS
-   .venv\Scripts\Activate.ps1  # Windows
+   source ../.venv/bin/activate  # Linux/macOS
+   ../.venv\Scripts\Activate.ps1  # Windows
    ```
 
 3. Run the main script:
@@ -207,7 +207,7 @@ The Jupyter notebook is organized into sections:
 
 ### Part 4: Implementation
 - TODO #1: Probability paths
-- TODO #2: Velocity fields  
+- TODO #2: Velocity fields
 - TODO #3: Flow matching loss
 - Building and training the model
 
@@ -244,14 +244,6 @@ When you run the tutorial, you'll generate:
 - `ode_solver_comparison.png` - Euler vs RK45 comparison
 - `real_vs_generated.png` - Quality comparison
 - `marginal_distributions.png` - Statistical analysis
-
-**Example visualizations you'll create:**
-
-![Probability Paths](https://via.placeholder.com/600x200?text=Linear+vs+Variance+Preserving+Paths)
-*Comparison of different probability paths*
-
-![Flow Process](https://via.placeholder.com/600x200?text=Forward+and+Reverse+Flow)
-*How data flows through probability space*
 
 ---
 
@@ -312,7 +304,7 @@ $$x_{t+\Delta t} = x_t + v_\theta(x_t, t) \cdot \Delta t$$
 
 After completing the tutorial, try these experiments:
 
-### Easy (15-30 minutes each)
+### Easy (10 minutes each)
 
 1. **Change probability path:**
    ```python
@@ -322,7 +314,7 @@ After completing the tutorial, try these experiments:
 
 2. **Try different datasets:**
    ```python
-   config["dataset_type"] = "swiss_roll"
+   config["dataset_type"] = "swiss_roll" # "checkboard" ???
    ```
    Which path type works better?
 
@@ -337,7 +329,7 @@ After completing the tutorial, try these experiments:
    config["forward_timesteps"] = [0.0, 0.1, 0.5, 0.9, 1.0]
    ```
 
-### Medium (30-60 minutes each)
+### Medium (20 minutes each)
 
 5. **Compare path types:**
    - Train both linear and variance preserving
@@ -405,9 +397,9 @@ After completing the tutorial, try these experiments:
 
 ---
 
-## Comparison with Tutorial 1
+## Comparison with Tutorial 4
 
-| Aspect | DDPM (Tutorial 1) | Flow Matching (Tutorial 2) |
+| Aspect | DDPM (Tutorial 4) | Flow Matching (Tutorial 5) |
 |--------|-------------------|----------------------------|
 | **Process** | SDE (stochastic) | ODE (deterministic) |
 | **Forward** | Add noise with schedule | Follow probability path |
@@ -437,10 +429,9 @@ For deeper understanding, refer to these papers:
 
 ## Next Steps
 
-After completing Tutorial 2:
+After completing Tutorial 5:
 
-- **Tutorial 3:** [Advanced Topics](tutorial-3.md) - Coming Soon
-- Compare your experience with Tutorial 1
+- Compare your experience with Tutorial 4
 - Read the Flow Matching paper
 - Explore continuous normalizing flows
 - Experiment with real image datasets
@@ -451,15 +442,15 @@ After completing Tutorial 2:
 
 **Start Jupyter:**
 ```bash
-cd tutorial_2_flow_matching
-source .venv/bin/activate
+cd tutorial_5_flow_matching
+source ../.venv/bin/activate
 jupyter lab
 ```
 
 **Run CLI:**
 ```bash
-cd tutorial_2_flow_matching
-source .venv/bin/activate
+cd tutorial_5_flow_matching
+source ../.venv/bin/activate
 python -m flow_matching_tutorial.main
 ```
 

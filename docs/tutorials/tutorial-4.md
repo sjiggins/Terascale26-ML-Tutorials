@@ -1,4 +1,4 @@
-# Tutorial 1: Denoising Diffusion Probabilistic Models (DDPM)
+# Tutorial 4: Denoising Diffusion Probabilistic Models (DDPM)
 
 Learn the foundations of diffusion models by implementing DDPM from scratch.
 
@@ -6,7 +6,7 @@ Learn the foundations of diffusion models by implementing DDPM from scratch.
 
 This tutorial provides a hands-on introduction to **Denoising Diffusion Probabilistic Models (DDPM)**, one of the most influential approaches in modern generative modeling.
 
-**Duration:** 90-120 minutes
+**Duration:** 30-45 minutes
 
 **Difficulty:** Intermediate
 
@@ -66,8 +66,8 @@ You have **two options** for running this tutorial:
 
 2. Activate your virtual environment:
    ```bash
-   source .venv/bin/activate  # Linux/macOS
-   .venv\Scripts\Activate.ps1  # Windows
+   source ../.venv/bin/activate  # Linux/macOS
+   ../.venv\Scripts\Activate.ps1  # Windows
    ```
 
 3. Start Jupyter:
@@ -87,10 +87,10 @@ You have **two options** for running this tutorial:
 
 1. Open VSCode:
    ```bash
-   code tutorial_1_ddpm
+   code tutorial_4_ddpm
    ```
 
-2. Open `tutorial_notebook_DDPM.ipynb`
+2. Open `tutorial_notebook.ipynb`
 
 3. Select the "Tutorial Environment" kernel
 
@@ -106,13 +106,13 @@ You have **two options** for running this tutorial:
 
 1. Navigate to the tutorial directory:
    ```bash
-   cd tutorial_1_ddpm
+   cd tutorial_4_ddpm
    ```
 
 2. Activate your virtual environment:
    ```bash
-   source .venv/bin/activate  # Linux/macOS
-   .venv\Scripts\Activate.ps1  # Windows
+   source ../.venv/bin/activate  # Linux/macOS
+   ../.venv\Scripts\Activate.ps1  # Windows
    ```
 
 3. Run the main script:
@@ -223,14 +223,6 @@ When you run the tutorial, you'll generate:
 - `real_vs_generated.png` - Quality comparison
 - `marginal_distributions.png` - Statistical analysis
 
-**Example visualizations you'll create:**
-
-![Forward Process](https://via.placeholder.com/600x200?text=Forward+Diffusion+Process)
-*How data is gradually corrupted with noise*
-
-![Reverse Process](https://via.placeholder.com/600x200?text=Reverse+Diffusion+Process)
-*How the model recovers data from noise*
-
 ---
 
 ## Key Concepts Covered
@@ -274,7 +266,7 @@ $$\mathcal{L} = \mathbb{E}_{t, x_0, \epsilon} \left[\|\epsilon - \epsilon_\theta
 
 After completing the tutorial, try these experiments:
 
-### Easy (15-30 minutes each)
+### Easy (15 minutes each)
 
 1. **Change the dataset:**
    ```python
@@ -293,7 +285,7 @@ After completing the tutorial, try these experiments:
    config["batch_size"] = 128  # Change batch size
    ```
 
-### Medium (30-60 minutes each)
+### Medium (15 minutes each)
 
 4. **Compare schedulers:**
    - Linear vs cosine noise schedules
@@ -376,10 +368,9 @@ For deeper understanding, refer to these papers:
 
 ## Next Steps
 
-After completing Tutorial 1:
+After completing Tutorial 4:
 
-- **Tutorial 2:** [Flow Matching](tutorial-2.md) - Learn ODE-based alternatives to SDEs
-- **Tutorial 3:** [Advanced Topics](tutorial-3.md) - Conditional generation, guidance
+- **Tutorial 5:** [Flow Matching](tutorial-5.md) - Learn ODE-based alternatives to SDEs
 - Experiment with your own datasets
 - Read the original DDPM paper
 - Explore score-based models
@@ -391,14 +382,14 @@ After completing Tutorial 1:
 **Start Jupyter:**
 ```bash
 cd tutorial_1_ddpm
-source .venv/bin/activate
+source ../.venv/bin/activate
 jupyter lab
 ```
 
 **Run CLI:**
 ```bash
 cd tutorial_1_ddpm
-source .venv/bin/activate
+source ../.venv/bin/activate
 python -m ddpm_tutorial.main
 ```
 
@@ -425,4 +416,4 @@ from ddpm_tutorial.utils import create_toy_dataset
 ---
 
 !!! success "Ready to Start"
-    Head to `tutorial_1_ddpm/tutorial_notebook_DDPM.ipynb` and begin learning!
+    Head to `tutorial_4_ddpm/tutorial_notebook.ipynb` and begin learning!
