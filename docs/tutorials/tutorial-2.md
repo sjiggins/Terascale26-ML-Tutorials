@@ -175,14 +175,14 @@ perceptron_to_DNN_tutorial/
 
 - **`plotting.py`**: Professional visualizations
 	- Gradient flow over epochs
-   - Signed gradient distributions
-   - Train vs validation loss curves
-   - Overfitting detection
+	- Signed gradient distributions
+	- Train vs validation loss curves
+	- Overfitting detection
 
 - **`main.py`**: Complete tutorial workflow
 	- Part 1: Vanishing gradient problem
-   - Part 2: Overfitting detection
-   - Part 3: Regularization techniques
+	- Part 2: Overfitting detection
+	- Part 3: Regularization techniques
 
 ---
 

@@ -171,7 +171,7 @@ flow_matching_tutorial/
 
 - **`flow_solutions.py`**: Complete reference implementation
 	- Use this to check your work
-   - Contains fully working code
+	- Contains fully working code
 
 - **`models.py`**: Neural network models
 	- Same architecture as Tutorial 1
