@@ -156,20 +156,20 @@ ddpm_tutorial/
 **Key Files:**
 
 - **`diffusion.py`**: Core DDPM implementation
-  - Forward process (noise schedule)
-  - Reverse process (sampling)
-  - Loss computation
+	- Forward process (noise schedule)
+	- Reverse process (sampling)
+	- Loss computation
 
 - **`models.py`**: Neural network models
-  - Simple MLP denoiser
-  - Time embedding
-  - Sinusoidal positional encoding
+	- Simple MLP denoiser
+	- Time embedding
+	- Sinusoidal positional encoding
 
 - **`main.py`**: Complete training pipeline
-  - Data loading
-  - Model training
-  - Sample generation
-  - Visualization
+	- Data loading
+	- Model training
+	- Sample generation
+	- Visualization
 
 ---
 

@@ -183,34 +183,33 @@ DNNs_to_Transformer_tutorial/
 **Key Files:**
 
 - **`data_generator_multiscale.py`**: Multi-scale wave system
-  - Fast oscillations - CNN-friendly
-  - Slow trends - Transformer needed
-  - Regime transitions (every ~30 steps)
-  - Combines all components with controlled amplitudes
+	- Fast oscillations - CNN-friendly
+   - Slow trends - Transformer needed
+   - Regime transitions (every ~30 steps)
+   - Combines all components with controlled amplitudes
 
 - **`MultiLayerPerceptron_AR.py`**: Autoregressive MLP
-  - Flattens temporal structure
-  - Fully connected layers
-  - Learns arbitrary position-specific correlations
+	- Flattens temporal structure
+	- Fully connected layers
+	- Learns arbitrary position-specific correlations
 
 - **`CNN_AR_v2.py`**: Autoregressive CNN
-  - 1D convolutions over time
-  - No BatchNorm (critical for autoregressive!)
-  - Attention-based temporal aggregation
-  - Parameter sharing across time
+	- 1D convolutions over time
+	- Attention-based temporal aggregation
+	- Parameter sharing across time
 
 - **`Transformer_AR.py`**: Autoregressive Transformer
-  - Multi-head self-attention
-  - Positional encoding
-  - Global receptive field
-  - GPT-style architecture for time-series
+	- Multi-head self-attention
+	- Positional encoding
+	- Global receptive field
+	- GPT-style architecture for time-series
 
 - **`main.py`**: Complete pipeline
-  - Data generation and visualization
-  - Model building (all three architectures)
-  - Training with teacher forcing
-  - Autoregressive evaluation
-  - Error analysis with confidence bands
+	- Data generation and visualization
+	- Model building (all three architectures)
+	- Training with teacher forcing
+	- Autoregressive evaluation
+	- Error analysis with confidence bands
 
 ---
 
