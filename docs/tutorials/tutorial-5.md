@@ -163,25 +163,25 @@ flow_matching_tutorial/
 **Key Files:**
 
 - **`flow.py`**: Core flow matching implementation
-  - Probability paths (linear, variance preserving)
-  - Velocity field computation
-  - Flow matching loss
-  - ODE solvers (Euler, RK45)
-  - **Contains 3 TODOs for you to implement!**
+	- Probability paths (linear, variance preserving)
+	- Velocity field computation
+	- Flow matching loss
+	- ODE solvers (Euler, RK45)
+	- **Contains 3 TODOs for you to implement!**
 
 - **`flow_solutions.py`**: Complete reference implementation
-  - Use this to check your work
-  - Contains fully working code
+	- Use this to check your work
+   - Contains fully working code
 
 - **`models.py`**: Neural network models
-  - Same architecture as Tutorial 1
-  - Predicts **velocity** instead of **noise**
+	- Same architecture as Tutorial 1
+	- Predicts **velocity** instead of **noise**
 
 - **`main.py`**: Complete training pipeline
-  - Configuration
-  - Training loop
-  - Sample generation
-  - Comprehensive visualizations
+	- Configuration
+	- Training loop
+	- Sample generation
+	- Comprehensive visualizations
 
 ---
 

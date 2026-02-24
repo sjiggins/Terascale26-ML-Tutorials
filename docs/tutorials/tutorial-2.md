@@ -163,26 +163,26 @@ perceptron_to_DNN_tutorial/
 **Key Files:**
 
 - **`MultiLayerPerceptron.py`**: Flexible MLP implementation
-  - Support for sigmoid, tanh, ReLU activations
-  - Configurable depth and width
-  - Dropout support
+	- Support for sigmoid, tanh, ReLU activations
+	- Configurable depth and width
+	- Dropout support
   
 - **`train.py`**: Advanced training functions
-  - Gradient tracking for vanishing gradient analysis
-  - Per-sample gradient distributions
-  - Train/validation/test split support
-  - Regularization (L1, L2, Elastic Net)
+	- Gradient tracking for vanishing gradient analysis
+	- Per-sample gradient distributions
+	- Train/validation/test split support
+	- Regularization (L1, L2, Elastic Net)
 
 - **`plotting.py`**: Professional visualizations
-  - Gradient flow over epochs
-  - Signed gradient distributions
-  - Train vs validation loss curves
-  - Overfitting detection
+	- Gradient flow over epochs
+   - Signed gradient distributions
+   - Train vs validation loss curves
+   - Overfitting detection
 
 - **`main.py`**: Complete tutorial workflow
-  - Part 1: Vanishing gradient problem
-  - Part 2: Overfitting detection
-  - Part 3: Regularization techniques
+	- Part 1: Vanishing gradient problem
+   - Part 2: Overfitting detection
+   - Part 3: Regularization techniques
 
 ---
 
